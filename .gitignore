@@ -1,0 +1,15 @@
+# Build artifacts
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Editor files
+*.swp
+*.swo
+
+# OS Garbage
+.DS_Store
+Thumbs.db
+
