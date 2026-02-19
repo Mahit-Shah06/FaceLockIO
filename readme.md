@@ -39,8 +39,6 @@ FSRC:
 
 ---
 
-## High-Level Architecture
-
-FSRC is designed as a set of clear, isolated blocks:
-
-
+## To run
+- cargo build
+- sudo -E env "PATH=$PATH" cargo run
