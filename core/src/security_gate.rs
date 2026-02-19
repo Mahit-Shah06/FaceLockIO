@@ -2,7 +2,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
 use std::time::Duration;
 
-pub static SHOULD_STOP: AtomBool = AtomicBool::new(false);
+pub static SHOULD_STOP: AtomicBool = AtomicBool::new(false);
 
 pub fn start() {
     println!("Security Gate started");
@@ -11,7 +11,7 @@ pub fn start() {
         if let Err(e) = emergency_stop_listener() {
             eprintln!("Security Gate Error: {}", e);
         }
-    )};
+    });
 }
 
 pub fn stop() {
@@ -21,7 +21,7 @@ pub fn stop() {
 
 pub fn emergency_stop_listener() -> Result<(), Box<dyn std::error::Error>> {
 
-    println("Security Gate: Monitoring for emergency shortcut");
+    println!("Security Gate: Monitoring for emergency shortcut");
 
     loop {
         if SHOULD_STOP.load(Ordering::SeqCst){
@@ -31,5 +31,5 @@ pub fn emergency_stop_listener() -> Result<(), Box<dyn std::error::Error>> {
     thread::sleep(Duration::from_millis(100));
     }
 
-    Ok(());
+    Ok(())
 }

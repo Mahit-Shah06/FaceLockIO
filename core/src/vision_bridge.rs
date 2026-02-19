@@ -1,15 +1,6 @@
 pub fn start() -> bool {
-
-    println!("Vision Bridge Started");
-
-    if is_cam_available(){
-        println!("Camera available");
-        true
-    }
-    else{
-        println!("Camera unavailable");
-        false
-    }
+    println!("Vision bridge started");
+    true
 }
 
 pub fn stop() {

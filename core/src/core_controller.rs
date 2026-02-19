@@ -1,24 +1,28 @@
-pub fn start() {
+use std::sync::atomic::Ordering;
+use std::thread;
+use std::time::Duration;
+
+pub fn start(){
     println!("Core Controller started");
 
-    crate::input_controller::start();
     crate::security_gate::start();
-    loop{
+    crate::input_controller::start();
 
-        let faceDetected = crate::vision_bridge::check_for_face();
-
-        if faceDetected{
-            crate::input_controller:unblock();
-        }else{
-            crate::input_controller:block_input();
+    loop {
+        if crate::security_gate::SHOULD_STOP.load(Ordering::SeqCst) {
+            println!("Core Controller: Stop Signal recieved from Security Gate.");
+            break;
         }
-        std::thread::sleep(std::time::Duration:from_secs(1));
+
+        thread::sleep(Duration::from_millis(500));
     }
+
+    stop();
 }
 
-pub fn stop() {
-    crate::vision_bridge::stop();
-    crate::security_gate::stop();
+pub fn stop(){
     crate::input_controller::stop();
-    println!("Core Controller stopped");    
+    crate::security_gate::stop();
+    crate::vision_bridge::stop();
+    println!("Core Controller stopped");
 }
