@@ -1,15 +1,19 @@
 pub fn start() {
     println!("Core Controller started");
 
-    let cameraExists = crate::vision_bridge::start();
-    if !cameraExists{
-        println!("Camera does not exist");
-        stop();
-        return;
-    }
-
-    crate::security_gate::start();
     crate::input_controller::start();
+    crate::security_gate::start();
+    loop{
+
+        let faceDetected = crate::vision_bridge::check_for_face();
+
+        if faceDetected{
+            crate::input_controller:unblock();
+        }else{
+            crate::input_controller:block_input();
+        }
+        std::thread::sleep(std::time::Duration:from_secs(1));
+    }
 }
 
 pub fn stop() {
