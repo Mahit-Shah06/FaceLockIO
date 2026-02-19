@@ -1,3 +1,4 @@
+use evdev::{Device, Key};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
 use std::time::Duration;
@@ -21,15 +22,22 @@ pub fn stop() {
 
 pub fn emergency_stop_listener() -> Result<(), Box<dyn std::error::Error>> {
 
-    println!("Security Gate: Monitoring for emergency shortcut");
+    let device = Device::open("/dev/input/event2")?;
+    println!("Security Gate: Monitoring keyboard ({})", device.name().unwrap_or("Unknown"));
+
 
     loop {
-        if SHOULD_STOP.load(Ordering::SeqCst){
+        if SHOULD_STOP.load(Ordering::SeqCst) { break; }
+
+        let state = device.get_key_state()?;
+        if state.contains(Key::KEY_LEFTCTRL) && state.contains(Key::KEY_LEFTALT) && 
+            state.contains(Key::KEY_BACKSPACE) {
+            println!("Emergency Stop");
+            SHOULD_STOP.store(true, Ordering::SeqCst);
             break;
         }
 
-    thread::sleep(Duration::from_millis(100));
+        thread::sleep(Duration::from_millis(100));
     }
-
     Ok(())
 }

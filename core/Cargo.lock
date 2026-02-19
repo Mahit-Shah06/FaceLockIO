@@ -78,6 +78,7 @@ name = "core"
 version = "0.1.0"
 dependencies = [
  "evdev",
+ "libc",
  "opencv",
 ]
 
