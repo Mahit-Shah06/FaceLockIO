@@ -5,9 +5,14 @@ use std::time::Duration;
 pub fn start(){
     println!("Core Controller started");
 
-    if !crate::vision::start() {
-        println!("Core Controller: No camera found");
-        return;
+    match crate::vision::start() {
+        Ok(_) => {
+            println!("Vision System Online.");
+        },
+        Err(e) => {
+            println!("Stop; Error [{}] - {}", e.code(), e.message());
+            return;
+        }
     }
     crate::security_gate::start();
     crate::input_controller::start();

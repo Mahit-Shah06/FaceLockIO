@@ -15,7 +15,6 @@ pub fn is_cam_available() -> bool {
         }
         true
     } else {
-        println!("Vision: No cameras detected.");
         false
     }
 }

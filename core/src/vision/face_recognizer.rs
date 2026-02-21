@@ -6,19 +6,31 @@ use opencv::{
     imgproc
 };
 
-pub fn detect_in_frame(frame: &core::Mat, detector: &mut CascadeClassifier) -> bool {
-    if frame.empty() {return false; }
+pub struct FaceDetector {
+    classifier: CascadeClassifier
+}
 
+impl FaceDetector {
+    pub fn new(model_path: &str) -> Result<Self, opencv::Error> {
+        let classifier = CascadeClassifier::new(model_path)?;
+
+        Ok(Self { classifier })
+    }
+}
+
+pub fn detect(&mut self, frame: &core::Mat) -> bool {
     let mut gray = core::Mat::default();
-    imgproc::cvt_color(frame, &mut gray, imgproc::COLOR_BGR2GRAY, 0).unrwap();
+    imgproc::cvt_color(frame, &mut gray, imgproc::COLOR_BGR2GRAY, 0).unwrap();
 
-    let mut faces = core::Vector::<core::React>::new();
-
-    detector.detect_multi_scale(
-        &gray, &mut faces, 1.1, 3, 0, 
-        core::Size::new(30, 30), 
-        core::Size::new(0,0)
+    let mut faces = core::Vector::<core::Rect>::new();
+    self.classifier.detect_multi_scale(
+        &gray,
+        &mut faces,
+        1.1,
+        3,
+        0, 30, 0
     ).unwrap();
 
     faces.len() > 0
 }
+
