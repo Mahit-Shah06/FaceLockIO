@@ -40,5 +40,6 @@ FSRC:
 ---
 
 ## To run
+- cd core
 - cargo build
 - sudo -E env "PATH=$PATH" cargo run
