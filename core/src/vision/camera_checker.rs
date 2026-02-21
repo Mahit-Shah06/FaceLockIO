@@ -6,17 +6,11 @@ pub struct CameraInfo{
     pub name: String,
 }
 
-pub fn is_cam_available() -> bool {
+pub fn is_cam_available() -> (bool, Vec<CameraInfo>) {
     let available_cameras = list_available_cameras();
-    if !available_cameras.is_empty() {
-        println!("Vision: Found {} working camera(s):", available_cameras.len());
-        for cam in &available_cameras {
-            println!("  -> [{}] {}", cam.index, cam.name);
-        }
-        true
-    } else {
-        false
-    }
+    let success =  !available_cameras.is_empty();
+
+    return (success, available_cameras)
 }
 
 fn list_available_cameras() -> Vec<CameraInfo> {

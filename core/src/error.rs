@@ -1,3 +1,4 @@
+#[derive(Debug, Clone, Copy)]
 pub enum FsrcError {
     NoCameraFound = 101,
     CameraAccessDenied = 102,

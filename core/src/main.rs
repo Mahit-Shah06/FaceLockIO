@@ -3,6 +3,7 @@ mod core_controller;
 mod vision;
 mod security_gate;
 mod input_controller;
+mod error;
 
 use std::process;
 
