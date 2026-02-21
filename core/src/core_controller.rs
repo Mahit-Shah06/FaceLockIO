@@ -6,6 +6,7 @@ pub fn start(){
     println!("Core Controller started");
 
     crate::security_gate::start();
+    crate::vision_bridge::start();
     crate::input_controller::start();
 
     loop {
