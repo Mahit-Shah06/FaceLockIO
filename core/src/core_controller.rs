@@ -5,8 +5,11 @@ use std::time::Duration;
 pub fn start(){
     println!("Core Controller started");
 
+    if !crate::vision::start() {
+        println!("Core Controller: No camera found");
+        return;
+    }
     crate::security_gate::start();
-    crate::vision_bridge::start();
     crate::input_controller::start();
 
     loop {
@@ -23,7 +26,7 @@ pub fn start(){
 
 pub fn stop(){
     crate::input_controller::stop();
+    crate::vision::stop();
     crate::security_gate::stop();
-    crate::vision_bridge::stop();
     println!("Core Controller stopped");
 }
