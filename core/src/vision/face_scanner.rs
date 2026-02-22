@@ -10,6 +10,8 @@ use opencv::{
 use std::io::{self, Write};
 use std::thread;
 use std::time::Duration;
+use crate::vision::face_manager::FaceManager;
+use crate::errors::FsrcError;
 
 pub fn face_exist() -> bool {
     let path = "authorized_faces";
@@ -26,7 +28,7 @@ pub fn face_exist() -> bool {
     false
 }   
 
-pub fn enroll(index: i32) -> bool {
+pub fn enroll(index: i32) -> Result<bool, FsrcError> {
     println!("-=-=-=Enrolling New Face=-=-=-");
     print!("Enter name for this face: ");
     io::stdout().flush().unwrap();
@@ -48,12 +50,18 @@ pub fn enroll(index: i32) -> bool {
 
     loop {
         if cam.read(&mut frame).unwrap() && !frame.empty() {
-            highgui::imshow(window, &frame).unwrap();
+            highgui::imshow(window, &frame).unwrap();    
         }
 
         let key = highgui::wait_key(10).unwrap();
         if key == 115 {
+            if manager.is_trained && manager.verify_identity(&frame) {
+                highgui:destroy_window(window).unwrap();
+                return Err(FsrcError:: FaceAlreadyExists);
+            }
+
             let result = imgcodecs::imwrite(&save_path, &frame, &core::Vector::new());
+
             if result.is_ok() {
                 println!("Successfully enrolled: {}", name);
                 break;
