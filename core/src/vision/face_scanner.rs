@@ -5,6 +5,7 @@ use opencv::{
     videoio,
     imgcodecs,
     core,
+    highgui,
 };
 use std::io::{self, Write};
 use std::thread;
@@ -34,32 +35,39 @@ pub fn enroll(index: i32) -> bool {
     io::stdin().read_line(&mut name).expect("Failed to read line");
     let name = name.trim();
 
+    println!("Opening Camera - Press 'S' to capture");
+
     let save_path = format!("authorized_faces/{}.jpg",name);
 
-    //-----------Initializing scanning here to capture face-----------
-    {
-        println!("Scaning.... Look at the camera.");
-
-        let mut cam = videoio::VideoCapture::new(index, videoio::CAP_ANY).unwrap();
-        let mut frame = Mat::default();
+    let mut cam = videoio::VideoCapture::new(index, videoio::CAP_ANY).unwrap();
+    let mut frame = Mat::default();
     
-        thread::sleep(Duration::from_millis(500));
+    let window = "Scanning Face - Press 'S' to Capture";
 
+    highgui::named_window(window, highgui::WINDOW_AUTOSIZE).unwrap();
+
+    loop {
         if cam.read(&mut frame).unwrap() && !frame.empty() {
-            let result = imgcodecs::imwrite(&save_path, &frame, &core::Vector::new());
-
-            if result.is_ok() {
-                println!("Successfully enroled: {}", name);
-            }
-            else {
-                return false;
-            }   
+            highgui::imshow(window, &frame).unwrap();
         }
-        else {
+
+        let key = highgui::wait_key(10).unwrap();
+        if key == 115 {
+            let result = imgcodecs::imwrite(&save_path, &frame, &core::Vector::new());
+            if result.is_ok() {
+                println!("Successfully enrolled: {}", name);
+                break;
+            }
+        }
+
+        if key == 27 {
+            highgui::destroy_window(window).unwrap();
             return false;
         }
     }
+
+    highgui::destroy_window(window).unwrap();
     true
-}   
+}
 
 
