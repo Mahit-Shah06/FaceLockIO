@@ -7,7 +7,7 @@ pub enum FsrcError {
     ModelFileNotFound = 201,
     AuthorizedFolderMissing = 202,
     NoStoredFaces = 203,
-    FaceAlreadyExist = 204,
+    FaceAlreadyExists = 204,
 
     NotRunningAsRoot = 301,
     InputGrabFailed = 302,
@@ -17,10 +17,11 @@ impl FsrcError {
     /// Returns a human-readable message for the error code
     pub fn message(&self) -> &str {
         match self {
-            FsrcError::FaceAlreadyExist => "This face is already registered in the system.",
+            FsrcError::FaceAlreadyExists => "This face is already registered in the system.",
             FsrcError::NoCameraFound => "No video devices detected in /dev/video*.",
             FsrcError::CameraAccessDenied => "Permission denied when accessing the camera.",
             FsrcError::ModelFileNotFound => "The Haar Cascade XML file was not found in /models.",
+            FsrcError::AuthorizedFolderMissing => "No authorized folder was found",
             FsrcError::NoStoredFaces => "No authorized faces found. Please run the scanner.",
             FsrcError::NotRunningAsRoot => "Root privileges (sudo) are required for this operation.",
             _ => "An unknown error occurred.",

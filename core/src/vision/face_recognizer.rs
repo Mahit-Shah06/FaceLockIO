@@ -6,7 +6,7 @@ use opencv::{
     face::LBPHFaceRecognizer,
 };
 use std::fs;
-use crate::errors::FsrcError;
+use crate::error::FsrcError;
 
 pub struct FaceRecognizer {
     model: core::Ptr<LBPHFaceRecognizer>,
@@ -25,7 +25,7 @@ impl FaceRecognizer {
         let mut images = core::Vector::<Mat>::new();
         let mut labels = core::Vector::<i32>::new();
 
-        let entries = fs::read_dir(path).map_err(|_| FsrcError:AuthroizedFolderMissing)?;
+        let entries = fs::read_dir(path).map_err(|_| FsrcError::AuthorizedFolderMissing)?;
 
         for (id, entry) in entries.enumerate() {
             let entry = entry.map_err(|_| FsrcError::NoStoredFaces)?;
@@ -37,7 +37,7 @@ impl FaceRecognizer {
                 labels.push(0);
             }
         }
-        Self.model.train(&images, &labels).map_err(|_| FsrcError::ModelFileNotFound)?;
+        self.model.train(&images, &labels).map_err(|_| FsrcError::ModelFileNotFound)?;
 
         Ok(())
     }
@@ -46,7 +46,7 @@ impl FaceRecognizer {
         if frame.empty() {return Ok(false); }
 
         let mut gray  = Mat::default();
-        imgproc::cvt_color(frame, &mut gray, imgproc::COLOR_BGR2GRAY, 0).map_err(|_| FsrcError:ModelFileNotFound)?;
+        imgproc::cvt_color(frame, &mut gray, imgproc::COLOR_BGR2GRAY, 0).map_err(|_| FsrcError::ModelFileNotFound)?;
 
         let mut label = -1;
         let mut confidence = 0.0;

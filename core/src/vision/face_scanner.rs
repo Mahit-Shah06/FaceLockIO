@@ -11,7 +11,7 @@ use std::io::{self, Write};
 use std::thread;
 use std::time::Duration;
 use crate::vision::face_manager::FaceManager;
-use crate::errors::FsrcError;
+use crate::error::FsrcError;
 
 pub fn face_exist() -> bool {
     let path = "authorized_faces";
@@ -28,7 +28,7 @@ pub fn face_exist() -> bool {
     false
 }   
 
-pub fn enroll(index: i32) -> Result<bool, FsrcError> {
+pub fn enroll(index: i32, manager: &FaceManager) -> Result<bool, FsrcError> {
     println!("-=-=-=Enrolling New Face=-=-=-");
     print!("Enter name for this face: ");
     io::stdout().flush().unwrap();
@@ -54,9 +54,9 @@ pub fn enroll(index: i32) -> Result<bool, FsrcError> {
         }
 
         let key = highgui::wait_key(10).unwrap();
-        if key == 115 {
+        if key == 115 {//s
             if manager.is_trained && manager.verify_identity(&frame) {
-                highgui:destroy_window(window).unwrap();
+                highgui::destroy_window(window).unwrap();
                 return Err(FsrcError:: FaceAlreadyExists);
             }
 
@@ -68,14 +68,14 @@ pub fn enroll(index: i32) -> Result<bool, FsrcError> {
             }
         }
 
-        if key == 27 {
+        if key == 27 {//esc
             highgui::destroy_window(window).unwrap();
-            return false;
+            return Ok(false);
         }
     }
 
     highgui::destroy_window(window).unwrap();
-    true
+    Ok(true)
 }
 
 

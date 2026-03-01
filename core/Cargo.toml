@@ -7,5 +7,8 @@ edition = "2024"
 # For Linux input control
 evdev = "0.12.1"
 libc = "0.2.182"
+sha2 = "0.10"
+sysinfo = "0.29"
+
 # For ultra-lightweight face detection
 opencv = { version = "0.92", default-features = false, features = ["face", "imgcodecs", "highgui", "videoio", "objdetect", "imgproc"] }

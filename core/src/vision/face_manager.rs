@@ -1,5 +1,5 @@
-use crate::vision::face_recognizer:FaceRecognizer;
-use crate::errors::FsrcError;
+use crate::vision::face_recognizer::FaceRecognizer;
+use crate::error::FsrcError;
 use opencv::prelude::*;
 
 pub struct FaceManager {

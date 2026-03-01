@@ -9,6 +9,7 @@ pub fn start(enroll_mode: bool) -> Result<FaceManager, FsrcError> {
     println!("Vision Bridge Started");
     
     let (available, cam_list)   = camera_checker::is_cam_available();
+    let mut manager = FaceManager::new()?;
 
     if !available {
         return Err(FsrcError::NoCameraFound);
@@ -16,7 +17,7 @@ pub fn start(enroll_mode: bool) -> Result<FaceManager, FsrcError> {
 
     let indice = cam_list[0].index;
 
-    if !face_scanner::face_exist() || enroll_mode {
+    if !face_scanner::face_exist() {
         match face_scanner::enroll(indice, &manager) {
             Ok(true) => {
                 manager.refresh_database()?;
@@ -24,15 +25,14 @@ pub fn start(enroll_mode: bool) -> Result<FaceManager, FsrcError> {
             Ok(false) => {
                 if !face_scanner::face_exist(){
                     return Err(FsrcError::NoStoredFaces);
-                },
+                }
+            },
             Err(e) => {
                 return Err(e);
             }
         }
     }
     
-
-    let mut manager = FaceMaager::new()?;
     manager.refresh_database()?;
     
     Ok(manager)

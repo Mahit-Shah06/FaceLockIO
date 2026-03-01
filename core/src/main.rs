@@ -5,8 +5,6 @@ mod security_gate;
 mod input_controller;
 mod error;
 
-use std::process;
-
 fn main() {
     println!("FSRC Backend starting");
     if unsafe { libc::getuid() } != 0 {
